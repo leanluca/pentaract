@@ -1,0 +1,27 @@
+version: "3.9"
+
+volumes:
+  pentaract-db-volume:
+    name: pentaract-db-volume
+
+services:
+  pentaract:
+    container_name: pentaract
+    image: thedominux/pentaract
+    env_file:
+      - .env
+    ports:
+      - ${PORT}:8000
+    restart: unless-stopped
+    depends_on:
+      - db
+
+  db:
+    container_name: pentaract_db
+    image: postgres:15.0-alpine
+    environment:
+      POSTGRES_USER: ${DATABASE_USER}
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
+    restart: unless-stopped
+    volumes:
+      - pentaract-db-volume:/var/lib/postgresql/data
